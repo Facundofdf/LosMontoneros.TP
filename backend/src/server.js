@@ -1,6 +1,14 @@
+// ===============================
+// 🌱 Configuración base del servidor
+// ===============================
+import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// Cargar .env desde la raíz del backend
+dotenv.config({ path: path.resolve('../.env') });
+const frontendRoutes = process.env.FRONTEND_ROUTES.split(',');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -8,24 +16,42 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
-// Importar rutas (cuando existan)
-import productsRoutes from './routes/productsRoutes.js';
-app.use('/api/products', productsRoutes);
+// ===============================
+// Variables de entorno
+// ===============================
+const PORT = process.env.PORT || 3000;
 
-// Ruta raíz para servir el frontend
-// Servir frontend (archivos estáticos)
+// ===============================
+// Rutas API
+// ===============================
+import apiRoutes from './routes/routes.js';
+app.use('/api', apiRoutes);
+
+// ===============================
+// Servir frontend (VA DESPUÉS)
+// ===============================
 const frontendPath = path.join(__dirname, '../../frontend/src');
 app.use(express.static(frontendPath));
 
-// Redirigir al index SOLO rutas que no sean de API ni archivos estáticos
+// Fallback para SPA (VA AL FINAL)
 app.get('*', (req, res) => {
-    // Si la ruta pide un archivo (tiene punto .), no devolver index.html
-    if (req.path.includes('.')) {
-        return res.status(404).send('Archivo no encontrado');
+    // Si es ruta API, dejar pasar
+    if (req.path.startsWith('/api')) return res.status(404).json({ error: 'API no encontrada' });
+
+    // Si es ruta estática (css/js/img), dejar pasar
+    if (req.path.includes('.')) return res.status(404).send('Archivo no encontrado');
+
+    // Si la ruta está definida en frontendRoutes
+    if (frontendRoutes.includes(req.path)) {
+        return res.sendFile(path.join(frontendPath, 'index.html'));
     }
-    res.sendFile(path.join(frontendPath, 'index.html'));
+
+    // Ruta no válida
+    res.status(404).send('Página no encontrada');
 });
-
-
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+// ===============================
+// Inicialización del servidor
+// ===============================
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});

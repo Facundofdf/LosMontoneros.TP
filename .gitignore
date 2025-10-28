@@ -1,32 +1,44 @@
 # =========================
-# 🔧 Node / Express backend
+# Node / Express backend
 # =========================
-# Node modules (anywhere)
 node_modules/
-
-# Environment files (local secrets)
 .env
-.env.local
-.env.*.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+.env.*
 logs/
+*.log
 
-# Build / distribution outputs (frontend/backend builds)
+# =========================
+# Base de datos
+# =========================
+*.sqlite
+*.sqlite3
+
+# =========================
+# Build / distribution outputs
+# =========================
 dist/
 build/
 public/dist/
 public/build/
 
+# =========================
 # Test / cache
+# =========================
 coverage/
 .cache/
 
+# =========================
+# Frontend / local server
+# =========================
+frontend/src/**/*.map
+frontend/src/**/*.tmp
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# =========================
 # OS / editor files
+# =========================
 .DS_Store
 Thumbs.db
 .vscode/

@@ -125,8 +125,8 @@ El backend funciona correctamente con Sequelize 6.x.
 
 **Los Montoneros – Programación III**
 
-* Kevin M.
-* [Nombre de tu compañero]
+* Facundo Damian Fernandez
+* Kevin Damian Paniagua
 
 ---
 
