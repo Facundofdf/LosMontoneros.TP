@@ -1,3 +1,5 @@
+import {connectThemeButton} from '../shared/theme.js';
+
 export function mountWelcome(root, { onContinue } = {}) {
     const shadow = root; 
 
@@ -24,5 +26,7 @@ export function mountWelcome(root, { onContinue } = {}) {
             localStorage.setItem('user_name', name);
             if (onContinue) onContinue(name);
         });
+        const themeBtn = shadow.querySelector('#theme-toggle-btn');
+        connectThemeButton(themeBtn);
     });
 }

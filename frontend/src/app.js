@@ -2,36 +2,12 @@ import { mountWelcome } from "./features/welcome/welcome.js";
 import { mountMaintenance } from "./features/maintenance/maintenance.js";
 import { mountProductos } from "./features/productos/productos.js";
 
+import { getPreferredTheme, setTheme, connectThemeButton } from "./features/shared/theme.js";
+
 const app = document.getElementById("app");
 let navbarHtml = "";
 
 /* ===================== MANEJO DEL TEMA ===================== */
-function getPreferredTheme() {
-  const storedTheme = localStorage.getItem("theme");
-  if (storedTheme) return storedTheme;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
-
-function setTheme(theme) {
-  const root = document.documentElement;
-  const toggleBtn = document.getElementById("theme-toggle-btn");
-  if (theme === "dark") {
-    root.setAttribute("data-theme", "dark");
-    if (toggleBtn) toggleBtn.textContent = "Modo Claro";
-  } else {
-    root.setAttribute("data-theme", "light");
-    if (toggleBtn) toggleBtn.textContent = "Modo Oscuro";
-  }
-  localStorage.setItem("theme", theme);
-}
-
-function toggleTheme() {
-  const currentTheme = localStorage.getItem("theme") || getPreferredTheme();
-  const newTheme = currentTheme === "dark" ? "light" : "dark";
-  setTheme(newTheme);
-}
 setTheme(getPreferredTheme());
 
 /* ===================== MANEJO DEL CARRITO ===================== */
@@ -103,16 +79,12 @@ async function loadLayout() {
 function conectarListenersGlobales(userName) {
   // Conectar botón de tema
   const toggleBtn = document.getElementById("theme-toggle-btn");
-  if (toggleBtn) {
-    toggleBtn.addEventListener("click", toggleTheme);
-  }
+  connectThemeButton(toggleBtn);
   // ¡NUEVO! Conectar botón de logout
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout);
-  } // Actualizar estado visual (texto de botón, contador, nombre)
-
-  setTheme(getPreferredTheme());
+  }
   actualizarContadorCarrito(); // Actualiza el contador (lo pone en 0 si limpiamos)
   const userNameEl = document.getElementById("navbar-user-name");
   if (userNameEl) {
