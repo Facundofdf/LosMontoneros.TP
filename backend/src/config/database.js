@@ -16,12 +16,3 @@ export const sequelize = new Sequelize({
     storage: DB_STORAGE,
     logging: false,
 });
-
-(async () => {
-    try {
-        await sequelize.sync();
-        console.log('Base de datos sincronizada');
-    } catch (err) {
-        console.error('Error al sincronizar DB:', err);
-    }
-})();

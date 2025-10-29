@@ -1,4 +1,4 @@
-import { Producto } from '../models/Producto.js';
+import { Producto } from '../models/producto.js';
 
 // Controlador básico
 export async function getAllProducts(req, res) {
@@ -26,6 +26,7 @@ export async function getAllProducts(req, res) {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error al obtener productos', error });
+        console.log('Error: ' + error);
+        res.status(500).json({ message: 'Error al obtener productos', error: error.message });
     }
 }

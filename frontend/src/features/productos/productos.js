@@ -50,7 +50,7 @@ function renderProductos(productos) {
         const cardHtml = `
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
-                    <img src="${producto.imagenUrl || 'https://placehold.co/600x400/eee/aaa?text=Sin+Imagen'}" class="card-img-top" alt="${producto.nombre}">
+                    <img src="${producto.imagen || 'https://placehold.co/600x400/eee/aaa?text=Sin+Imagen'}" class="card-img-top" alt="${producto.nombre}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${producto.nombre}</h5>
                         <p class="card-text mt-auto mb-2">$${producto.precio.toFixed(2)}</p>
