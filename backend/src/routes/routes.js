@@ -4,9 +4,10 @@ import productsRoutes from './productsRoutes.js';
 const router = express.Router();
 
 // Agrupar todas las rutas API
-router.use('/products', productsRoutes);
+// CAMBIO: de '/products' a '/productos' para que coincida con tu frontend
+router.use('/productos', productsRoutes);
 
-// Manejador de errores para rutas API no existentes
+// Manejador de errores...
 router.use('*', (req, res) => {
     res.status(404).json({
         error: 'Ruta API no encontrada',

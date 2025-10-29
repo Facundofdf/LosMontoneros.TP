@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="app-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#/productos">
+            <img src="./assets/logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            Los Montoneros
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#/productos">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#/carrito">Carrito (<span id="cart-counter">0</span>)</a>
+                </li>
+            </ul>
+
+            <span class="navbar-text me-3" id="navbar-user-name">
+                Hola, ...
+            </span>
+
+            <button id="theme-toggle-btn" class="btn btn-outline-light me-2">
+                Modo Oscuro
+            </button>
+
+            <button id="logout-btn" class="btn btn-outline-danger">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+</nav>

@@ -139,7 +139,3 @@ El backend funciona correctamente con Sequelize 6.x.
 
 * Kevin Damian Paniagua
 * Facundo Damian Fernandez
-
----
-
-¿Querés que el README incluya también un apartado "Cómo contribuir" con los pasos para que tu compañero agregue endpoints nuevos sin romper la estructura?

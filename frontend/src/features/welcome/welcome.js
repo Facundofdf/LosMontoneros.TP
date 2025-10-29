@@ -15,6 +15,12 @@ export function mountWelcome(root, { onContinue } = {}) {
             e.preventDefault();
             const name = input.value.trim();
             if (!name) return;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if(!users.includes(name)){
+                users.push(name);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
             localStorage.setItem('user_name', name);
             if (onContinue) onContinue(name);
         });

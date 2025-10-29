@@ -1,0 +1,122 @@
+.productos-container {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.productos-container h2 {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* * =================================
+ * Filtros
+ * =================================
+ */
+.filtros {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Para que se vea bien en móviles */
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.filtro-btn {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filtro-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--primary-text);
+  border-color: var(--primary-color);
+}
+
+/* * =================================
+ * Tarjetas de Producto (Card)
+ * =================================
+ */
+
+/* Asumimos que estás usando Bootstrap para .row y .col-md-4.
+  Estos estilos son para la .card interna.
+*/
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+[data-theme="dark"] .card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card .card-title {
+  color: var(--text-color);
+}
+
+.card .card-text {
+  color: var(--text-color);
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.card .btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+}
+
+.card .btn-primary:hover {
+  opacity: 0.9;
+}
+
+
+/* * =================================
+ * Paginación
+ * =================================
+ */
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination .page-item {
+  margin: 0 2px;
+}
+
+.pagination .page-link {
+  background-color: var(--card-bg);
+  color: var(--link-color);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--border-color);
+  color: var(--link-hover);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--card-bg);
+  color: #888;
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .pagination .page-item.disabled .page-link {
+  color: #555;
+}
