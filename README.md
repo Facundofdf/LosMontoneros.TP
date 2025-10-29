@@ -47,47 +47,6 @@ El backend sirve automáticamente el **frontend** desde esa ruta.
 
 ---
 
-## 🧩 Estructura del proyecto
-
-```
-LosMontoneros.TP/
-│
-├── frontend/
-|   ├── servidor_mvc/           ← contiene archivos, bin, controllers, models, public, routes y views.
-|   |
-│   ├── src/
-│   |    ├── index.html          ← punto de entrada del cliente
-│   |    ├── app.js              ← router y lógica principal del frontend
-│   |    ├── features/           ← vistas separadas (welcome, productos, etc.)
-|   |    └── components           ← contiene un navbar
-|   |
-|   ├── package-lock.json
-|   └── package.json    
-│
-└── backend/
-    ├── package-lock.json
-    ├── package.json            ← configuración de dependencias
-    ├── config
-    ├── database
-    ├── models
-    ├── node_modules
-    ├── servidor_mvc
-    └── src/
-        ├── server.js           ← servidor Express
-        ├── config/
-        │   └── database.js     ← conexión Sequelize con SQLite
-        ├── models/
-        │   └── Producto.js     ← modelo de base de datos
-        ├── controllers/
-        │   └── productsController.js
-        ├── routes/
-        │   └── productsRoutes.js
-        └── database/
-            └── database.sqlite ← archivo SQLite
-```
-
----
-
 ## 🔗 Comunicación entre frontend y backend
 
 * El frontend **nunca accede directo a la base de datos**.
