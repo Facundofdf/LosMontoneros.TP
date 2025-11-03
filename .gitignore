@@ -21,24 +21,11 @@ build/
 public/dist/
 public/build/
 
-# =========================
 # Test / cache
-# =========================
 coverage/
 .cache/
 
-# =========================
-# Frontend / local server
-# =========================
-frontend/src/**/*.map
-frontend/src/**/*.tmp
-frontend/node_modules/
-frontend/dist/
-frontend/build/
-
-# =========================
 # OS / editor files
-# =========================
 .DS_Store
 Thumbs.db
 .vscode/
