@@ -1,0 +1,43 @@
+<section class="carrito-container">
+    <h2>Tu Carrito de Compras</h2>
+
+        <div id="cart-loading" class="cart-state">
+        <p>Cargando tu carrito...</p>
+            </div>
+
+        <div id="cart-empty" class="cart-state" style="display: none;">
+        <p>Tu carrito está vacío.</p>
+        <a href="/#/productos" class="btn-primary">Ver productos</a>
+    </div>
+
+        <div id="cart-content" style="display: none;">
+                <div id="cart-items-container">
+                    </div>
+
+                <div id="cart-summary">
+            <h3>Total: <span id="cart-total-price">$0.00</span></h3>
+            <button id="btn-show-confirm-modal" class="btn-success">Finalizar Compra</button>
+            <a href="/#/productos" class="btn-secondary">Seguir Comprando</a>
+        </div>
+    </div>
+
+    </div>
+    <div class="modal fade" id="confirmarCompraModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Confirmar Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas finalizar tu compra?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-compra">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

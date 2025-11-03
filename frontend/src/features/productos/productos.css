@@ -1,0 +1,162 @@
+.productos-container {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.productos-container h2 {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* * =================================
+ * Filtros
+ * =================================
+ */
+.filtros {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Para que se vea bien en móviles */
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.filtro-btn {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filtro-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--primary-text);
+  border-color: var(--primary-color);
+}
+
+/* * =================================
+ * Tarjetas de Producto (Card)
+ * =================================
+ */
+
+/* Asumimos que estás usando Bootstrap para .row y .col-md-4.
+  Estos estilos son para la .card interna.
+*/
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+[data-theme="dark"] .card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card .card-title {
+  color: var(--text-color);
+}
+
+.card .card-text {
+  color: var(--text-color);
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.card .btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+}
+
+.card .btn-primary:hover {
+  opacity: 0.9;
+}
+
+
+/* * =================================
+ * Paginación
+ * =================================
+ */
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination .page-item {
+  margin: 0 2px;
+}
+
+.pagination .page-link {
+  background-color: var(--card-bg);
+  color: var(--link-color);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--border-color);
+  color: var(--link-hover);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--card-bg);
+  color: #888;
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .pagination .page-item.disabled .page-link {
+  color: #555;
+}
+
+.productos-container .card {
+    height: 100%; /* Ajuste para que la tarjeta ocupe el espacio de su columna */
+}
+
+.productos-container .card-img-top {
+    width: 100%;       /* Ocupa todo el ancho disponible de la tarjeta */
+    height: 200px;     /* <--- ALTURA FIJA: Define la altura que deseas para todas las imágenes */
+    object-fit: cover; /* <--- CLAVE: Recorta la imagen para que cubra el área sin distorsionarla */
+    object-position: center center; /* Centra la imagen dentro del contenedor */
+    background-color: #f0f0f0;  /* Para ver el fondo si la imagen no carga o es transparente */
+    border-bottom: 1px solid #eee;
+}
+
+.productos-container .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empuja el botón al final si hay espacio */
+    padding: 15px;
+}
+
+/* Asegura que la descripción no tome demasiado espacio si es muy larga */
+.productos-container .card-title + .card-text {
+    font-size: 0.9rem;     /* Letra más chica (aprox 14px si tu base es 16px) */
+    font-weight: 400;      /* Peso normal (400 es el estándar, no-negrita) */
+    color: #6c757d;      /* Un color gris (secundario) para que no sea tan fuerte */
+    margin-bottom: 1rem;
+}
+
+/* Asegura que el precio tenga espacio y el botón se alinee bien */
+.productos-container .card-text.mt-auto {
+    margin-top: auto !important; /* Mantiene el margin-top auto para empujar hacia abajo */
+    margin-bottom: 10px !important; /* Espacio antes del botón */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.productos-container .btn-agregar {
+    width: 100%;
+}

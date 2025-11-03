@@ -1,0 +1,180 @@
+.carrito-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.carrito-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Estilos para el item individual */
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.cart-item-info {
+    flex-grow: 1;
+}
+
+.cart-item-info h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.cart-item-info p {
+    margin: 0;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.cart-item-details {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cart-item-price {
+    min-width: 100px;
+    text-align: right;
+}
+
+.cart-item-price strong {
+    font-size: 1.1rem;
+}
+
+.cart-item-remove {
+    background-color: #dc3545; /* Bootstrap danger */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cart-item-remove:hover {
+    background-color: #c82333;
+}
+
+/* Resumen del carrito */
+#cart-summary {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--primary-color);
+    text-align: right;
+}
+
+#cart-summary h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+#cart-summary .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 1rem;
+}
+
+#cart-summary .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* Estados de carga y vacío */
+.cart-state {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.cart-state p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.cart-state .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--primary-text);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Espacio entre botones y número */
+}
+
+.cart-item-quantity span {
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.quantity-btn {
+    background-color: var(--primary-color);
+    color: var(--primary-text);
+    border: none;
+    border-radius: 50%; /* Botones redondos */
+    width: 30px;
+    height: 30px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 28px; /* Ajuste vertical del texto */
+    text-align: center;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.quantity-btn:hover {
+    opacity: 0.85;
+}
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-btn.btn-decrease {
+    background-color: #6c757d; /* Gris (Bootstrap secondary) */
+}
+#confirmarCompraModal .modal-content {
+    color: #212529; /* Este es el color de texto oscuro estándar de Bootstrap */
+}
+
+/* Opcional: Si el título sigue viéndose mal, fuerza también este */
+#confirmarCompraModal .modal-title {
+    color: #212529;
+}

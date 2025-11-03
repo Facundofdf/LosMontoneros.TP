@@ -1,0 +1,88 @@
+.ticket-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-header {
+    text-align: center;
+    border-bottom: 2px dashed var(--border-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.ticket-header h2 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.ticket-info {
+    margin-bottom: 1.5rem;
+}
+
+.ticket-info p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.ticket-info strong {
+    min-width: 100px;
+    display: inline-block;
+}
+
+#ticket-products-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+#ticket-products-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#ticket-products-list li:last-child {
+    border-bottom: none;
+}
+
+.ticket-total {
+    text-align: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--border-color);
+}
+
+.ticket-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ticket-actions button {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#ticket-btn-pdf {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+#ticket-btn-exit {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+}
