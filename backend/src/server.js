@@ -4,12 +4,12 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import { fileURLToPath } from 'url';
 
 // Importamos la instancia de Sequelize y los modelos
 import { sequelize } from './config/database.js';
-import './models/producto.js';
-// ---
+import "./associations.js";
 
 // Cargar .env desde la raíz del backend
 dotenv.config({ path: path.resolve('../.env') });
@@ -19,12 +19,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // ===============================
 // Variables de entorno
 // ===============================
-const PORT = process.env.PORT || 4000; // <- Corregí el puerto a 4000 como mencionaste
+const PORT = process.env.PORT || 4000;
 
 // ===============================
 // Rutas API
@@ -41,12 +42,11 @@ app.use(express.static(frontendPath));
 
 // Fallback para SPA (VA AL FINAL)
 app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return res.status(404).json({ error: 'API no encontrada' });
-    if (req.path.includes('.')) return res.status(404).send('Archivo no encontrado');
-    if (frontendRoutes.includes(req.path)) {
-        return res.sendFile(path.join(frontendPath, 'index.html'));
-    }
-    res.status(404).send('Página no encontrada');
+    if (req.path.startsWith('/api')) return res.status(404).json({ error: 'API no encontrada' });
+    if (frontendRoutes.includes(req.path)) {
+        return res.sendFile(path.join(frontendPath, 'index.html'));
+    }
+    return res.status(404).send('Página no encontrada');
 });
 
 // ===============================
@@ -56,12 +56,12 @@ async function startServer() {
     try {
         // force: false -> Crea las tablas si no existen, pero NO las borra si ya existen.
         // Es la opción segura para producción y para tus datos reales.
-        await sequelize.sync({ force: false }); 
+        await sequelize.sync({ force: true });
         console.log('Base de datos sincronizada correctamente.');
 
         // 2. Iniciar el servidor
         app.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+            console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });
 
     } catch (error) {
