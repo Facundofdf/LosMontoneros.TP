@@ -94,3 +94,7 @@ El backend funciona correctamente con Sequelize 6.x.
 
 * Kevin Damian Paniagua
 * Facundo Damian Fernandez
+
+---
+
+Agregar modales de notificación.

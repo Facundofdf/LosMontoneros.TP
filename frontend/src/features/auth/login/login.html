@@ -1,30 +1,29 @@
-<!DOCTYPE html>
-<html lang="es">
+<div class="login-card">
+    <form id="login-form">
+        <h2>Iniciar sesión Admin</h2>
+        
+        <label>
+            Usuario (admin)
+            <input name="username" type="text" required />
+        </label>
+        <label>
+            Contraseña
+            <input name="password" type="password" required />
+        </label>
+        
+        <p id="login-error" class="error"></p>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="./login.css">
-    <script type="module" src="./login.js" defer></script>
-</head>
+        <div class="d-grid gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button type="button" id="tester-btn" class="btn btn-secondary">Acceso Rápido (Tester)</button>
+        </div>
 
-<body>
-    <div class="login-card">
-        <form id="login-form">
-            <h2>Iniciar sesión</h2>
-            <label>
-                Usuario
-                <input name="username" type="text" required />
-            </label>
-            <label>
-                Contraseña
-                <input name="password" type="password" required />
-            </label>
-            <button type="submit">Entrar</button>
-            <p id="login-error" class="error"></p>
-        </form>
+        <div class="text-center mt-3">
+            <a href="#/registro">No tienes cuenta? Regístrate</a>
+        </div>
+    </form>
+
+    <div class="text-center mt-3 border-top pt-3">
+        <button type="button" id="volver-btn" class="btn btn-outline-secondary btn-sm">Volver al Inicio</button>
     </div>
-
-</body>
-
-</html>
+</div>

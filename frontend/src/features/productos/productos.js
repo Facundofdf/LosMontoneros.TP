@@ -19,7 +19,7 @@ async function cargarProductos(categoria = null, page = 1) {
         renderPaginacion(data.totalPages, data.currentPage);
         
     } catch (error) {
-        console.error('Error al cargar productos:', error);
+        console.error('Error al cargar productos: ', error);
         const productList = document.getElementById('product-list');
         if (productList) {
             productList.innerHTML = `<p class="text-danger">Error al cargar productos.</p>`;

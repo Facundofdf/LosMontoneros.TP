@@ -17,9 +17,9 @@ export const listProducts = async (req, res) => {
 
     res.json({
         total: productos.count,
-        pagina: Number(pagina),
-        paginas: Math.ceil(productos.count / limite),
-        data: productos.rows
+        currentPage: Number(pagina),
+        totalPage: Math.ceil(productos.count / limite),
+        productos: productos.rows
     });
 };
 

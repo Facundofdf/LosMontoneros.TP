@@ -3,6 +3,7 @@ import { mountMaintenance } from "./features/maintenance/maintenance.js";
 import { mountProductos } from "./features/productos/productos.js";
 import { mountCarrito } from "./features/carrito/carrito.js";
 import { mountTicket } from "./features/ticket/ticket.js";
+import { mountLogin } from "./features/auth/login/login.js";
 
 import { getPreferredTheme, setTheme, connectThemeButton } from "./features/shared/theme.js";
 
@@ -123,6 +124,12 @@ function conectarListenersGlobales(userName) {
   if (userNameEl) {
     userNameEl.textContent = `Hola ${userName} ☺`;
   }
+  const loginBtn = document.getElementById("login-btn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      navigate("/login"); 
+    });
+  }
 }
 
 /**
@@ -130,7 +137,7 @@ function conectarListenersGlobales(userName) {
  */
 function route(path) {
   const userName = localStorage.getItem("user_name"); // 1. ======= GUARDIA DE AUTENTICACIÓN =======
-  if (!userName && path !== "/inicio") {
+  if (!userName && path !== "/inicio" && path !== "/login") {
     console.warn("Usuario no logueado. Redirigiendo a /inicio.");
     navigate("/inicio");
     return;
@@ -184,6 +191,20 @@ function route(path) {
     case "/trabajando":
       mountMaintenance(currentViewContainer, {
         error: "Esta sección aún no está implementada.",
+        onReturn: () => navigate("/productos"),
+      });
+      break;
+    case "/login":
+      mountLogin(currentViewContainer, {
+          onSuccess: () => {
+            navigate("/dashboard");
+          },
+          onVolver: restartApp
+      });
+      break;
+    case "/dashboard":
+      mountMaintenance(currentViewContainer, {
+        error: "¡Bienvenido, Admin! Dashboard en construcción.",
         onReturn: () => navigate("/productos"),
       });
       break;
