@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
-const VentaProducto = sequelize.define("Venta", {
+const VentaProducto = sequelize.define("VentaProductos", {
     cantidad: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -10,6 +10,6 @@ const VentaProducto = sequelize.define("Venta", {
         type: DataTypes.FLOAT,
         allowNull: false
     }
-}, { timestamps: false });
+}, { timestamps: true });
 
 export default VentaProducto;

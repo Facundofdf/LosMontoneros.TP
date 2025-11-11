@@ -4,11 +4,10 @@ import Venta from './models/Venta.js';
 import VentaProducto from './models/VentaProducto.js';
 import UsuarioAdmin from './models/UsuarioAdmin.js';
 
-// Relaciones
-Venta.hasMany(VentaProducto, { foreignKey: 'ventaId' });
-VentaProducto.belongsTo(Venta, { foreignKey: 'ventaId' });
 
-Producto.hasMany(VentaProducto, { foreignKey: 'productoId' });
-VentaProducto.belongsTo(Producto, { foreignKey: 'productoId' });
+Venta.hasMany(VentaProducto, { foreignKey: 'ventaId', as: 'VentaProductos' });
+VentaProducto.belongsTo(Venta, { foreignKey: 'ventaId', as: 'Venta' });
+VentaProducto.belongsTo(Producto, { foreignKey: 'productoId', as: 'Producto' });
+
 
 export { Producto, Venta, VentaProducto, UsuarioAdmin };

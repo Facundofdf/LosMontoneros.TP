@@ -5,69 +5,142 @@ import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
-
-// Importamos la instancia de Sequelize y los modelos
 import { sequelize } from './config/database.js';
-import "./associations.js";
+import './associations.js';
+import bcrypt from 'bcrypt';
+import UsuarioAdmin from './models/UsuarioAdmin.js';
+import expressLayouts from 'express-ejs-layouts';
 
-// Cargar .env desde la raíz del backend
+// ===============================
+// 🔧 Cargar configuración .env
+// ===============================
 dotenv.config({ path: path.resolve('../.env') });
-const frontendRoutes = process.env.FRONTEND_ROUTES.split(',');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// ===============================
-// Variables de entorno
-// ===============================
 const PORT = process.env.PORT || 4000;
 
-// ===============================
-// Rutas API
-// ===============================
-import apiRoutes from './routes/routes.js';
-// *Importante: Al importar las rutas, Sequelize registra los modelos*
-app.use('/api', apiRoutes);
+console.log('🌿 .env cargado correctamente');
+console.log('🧭 Entorno:', process.env.NODE_ENV);
 
 // ===============================
-// Servir frontend (VA DESPUÉS)
+// 🚀 Inicializar aplicación
 // ===============================
-const frontendPath = path.join(__dirname, '../../frontend/src');
-app.use(express.static(frontendPath));
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Fallback para SPA (VA AL FINAL)
-app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return res.status(404).json({ error: 'API no encontrada' });
-    if (frontendRoutes.includes(req.path)) {
-        return res.sendFile(path.join(frontendPath, 'index.html'));
+// ===============================
+// 🌍 Configuración CORS
+// ===============================
+app.use(cors({
+    origin: process.env.CORS_ORIGIN?.split(',') || '*',
+    methods: process.env.CORS_METHODS?.split(',') || ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: process.env.CORS_CREDENTIALS === 'true'
+}));
+
+// ===============================
+// 🔐 Configuración de sesión
+// ===============================
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'
     }
-    return res.status(404).send('Página no encontrada');
+}));
+
+// ===============================
+// 🖼 Configuración de vistas (EJS)
+// ===============================
+const viewsPath = path.resolve(__dirname, '..', process.env.VIEWS_PATH);
+app.set('views', viewsPath);
+app.set('view engine', process.env.VIEW_ENGINE || 'ejs');
+
+// Configuración de express-ejs-layouts
+app.use(expressLayouts);
+app.set('layout', 'admin/layout'); // layout por defecto para las vistas admin
+
+// Middleware para variable global en todas las vistas
+app.use((req, res, next) => {
+    res.locals.title = 'Panel Administrativo';
+    next();
 });
 
+console.log(`🖼  Motor de vistas: ${process.env.VIEW_ENGINE}`);
+console.log(`📁 Directorio de vistas: ${viewsPath}`);
+
 // ===============================
-// Inicialización del servidor (¡MODIFICADO!)
+// 🧭 Cargar vistas dinámicamente
 // ===============================
-async function startServer() {
+const viewRoutes = process.env.VIEW_ROUTES?.split(',').map(v => v.trim()) || [];
+for (const viewName of viewRoutes) {
     try {
-        // force: false -> Crea las tablas si no existen, pero NO las borra si ya existen.
-        // Es la opción segura para producción y para tus datos reales.
-        await sequelize.sync({ force: true });
-        console.log('Base de datos sincronizada correctamente.');
-
-        // 2. Iniciar el servidor
-        app.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
-        });
-
-    } catch (error) {
-        console.error('Error al inicializar el servidor:', error);
+        const module = await import(`./routes/${viewName}ViewRoutes.js`);
+        app.use(`/${viewName}`, module.default);
+        console.log(`✅ Vista registrada: /${viewName}`);
+    } catch (err) {
+        console.warn(`⚠️  No se pudo cargar la vista /${viewName}: ${err.message}`);
     }
 }
 
-// Iniciar todo
+// ===============================
+// 📡 Rutas API
+// ===============================
+import apiRoutes from './routes/routes.js';
+app.use('/api', apiRoutes);
+
+// ===============================
+// 🌐 Servir frontend (SPA)
+// ===============================
+const frontendPath = path.resolve(__dirname, '..', process.env.FRONTEND_PATH);
+const frontendRoutes = process.env.FRONTEND_ROUTES?.split(',').map(r => r.trim()) || [];
+
+app.use(express.static(frontendPath));
+console.log(`🧩 Frontend servido desde: ${frontendPath}`);
+
+app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ error: 'Ruta API no encontrada' });
+    }
+    if (frontendRoutes.includes(req.path)) {
+        return res.sendFile(path.join(frontendPath, 'index.html'));
+    }
+    res.status(404).send('Página no encontrada');
+});
+
+// ===============================
+// 🧠 Inicialización del servidor
+// ===============================
+async function startServer() {
+    try {
+        if (process.env.SEQUELIZE_FORCE_SYNC === 'true') {
+            await sequelize.sync({ force: true });
+            console.log('💾 Base de datos sincronizada (force: true)');
+
+            // Crear admin por defecto
+            const hash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+            await UsuarioAdmin.create({
+                email: process.env.ADMIN_EMAIL,
+                password_hash: hash
+            });
+            console.log('👤 Usuario admin creado por defecto');
+        } else {
+            await sequelize.sync();
+            console.log('💾 Base de datos sincronizada (normal)');
+        }
+
+        app.listen(PORT, () => {
+            console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error('💥 Error al inicializar el servidor:', error);
+    }
+}
+
 startServer();

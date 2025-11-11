@@ -15,6 +15,6 @@ const  Venta = sequelize.define("Venta", {
     allowNull: false
   },
 
-}, {timestamps: false});
+}, {timestamps: true});
 
 export default Venta;

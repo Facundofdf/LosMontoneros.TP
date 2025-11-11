@@ -1,18 +1,23 @@
-import { Router } from 'express';
+import express from "express";
 import {
-    createProduct,
-    updateProduct,
-    toggleProducto
-} from '../controllers/productsController.js';
-// import authAdmin from '../middlewares/authAdmin.js';
+  renderLogin,
+  renderDashboard,
+  renderProductoForm,
+} from "../controllers/adminViewController.js";
+import {
+  crearProducto,
+  obtenerProductos,
+} from "../controllers/adminController.js";
 
-const router = Router();
+const router = express.Router();
 
-// router.use(authAdmin); // se habilitará cuando exista auth
+// Vistas
+router.get("/login", renderLogin);
+router.get("/dashboard", renderDashboard);
+router.get("/productos/nuevo", renderProductoForm);
 
-// CRUD admin
-router.post('/', createProduct);          // POST /api/admin/productos
-router.put('/:id', updateProduct);        // PUT /api/admin/productos/:id
-router.patch('/:id/toggle', toggleProducto); // PATCH /api/admin/productos/:id/toggle
+// API (JSON)
+router.get("/api/admin/productos", obtenerProductos);
+router.post("/api/admin/productos", crearProducto);
 
 export default router;

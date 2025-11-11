@@ -1,0 +1,54 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    background: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.sidebar {
+    width: 240px;
+    background: #1e3c72;
+    color: white;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h1 {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.sidebar nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 0.5rem 0;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    transition: background 0.2s;
+}
+
+.sidebar nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar .logout {
+    color: #ffb3b3;
+}
+
+.content {
+    flex: 1;
+    background: #f8f9fa;
+}
+
+.table thead {
+    background-color: #e9ecef;
+}
+
+.badge {
+    font-size: 0.9rem;
+}

@@ -1,0 +1,123 @@
+<%- include('../partials/header', { title: 'Dashboard' }) %>
+
+<header class="mb-4 d-flex justify-content-between align-items-center">
+    <h1 class="text-primary"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+</header>
+
+<section class="metrics d-flex flex-wrap gap-3 mb-4">
+    <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
+        <span>Productos activos</span>
+        <strong class="fs-4 text-primary"><%= totales.activos %></strong>
+    </div>
+    <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
+        <span>Ventas</span>
+        <strong class="fs-4 text-primary"><%= totales.ventas %></strong>
+    </div>
+    <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
+        <span>Usuarios admin</span>
+        <strong class="fs-4 text-primary"><%= totales.admins %></strong>
+    </div>
+</section>
+
+<section class="panel bg-white rounded shadow-sm p-4 mb-4">
+    <header class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="bi bi-box-seam"></i> Productos</h2>
+        <a class="btn btn-primary" href="/admin/productos/nuevo"><i class="bi bi-plus-lg"></i> Nuevo</a>
+    </header>
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% productos.forEach(p=> { %>
+            <tr class="<%= p.activo ? '' : 'text-muted' %>">
+                <td><%= p.nombre %></td>
+                <td><%= p.categoria %></td>
+                <td>$ <%= Number(p.precio).toFixed(2) %></td>
+                <td>
+                    <span class="badge <%= p.activo ? 'bg-success' : 'bg-secondary' %>">
+                        <%= p.activo ? 'Activo' : 'Inactivo' %>
+                    </span>
+                </td>
+                <td class="text-end">
+                    <a href="/admin/productos/<%= p.id %>/editar" class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button data-id="<%= p.id %>" class="btn btn-sm btn-outline-warning toggle-producto">
+                        <i class="bi <%= p.activo ? 'bi-eye-slash' : 'bi-eye' %>"></i>
+                    </button>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<section class="panel bg-white rounded shadow-sm p-4 mb-4">
+    <header class="d-flex align-items-center mb-3">
+        <h2><i class="bi bi-cart-check"></i> Compras</h2>
+    </header>
+    <table class="table table-striped align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Productos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% ventas.forEach(v=> { %>
+            <tr>
+                <td><%= v.clienteNombre %></td>
+                <td><%= new Date(v.fecha).toLocaleDateString() %></td>
+                <td>$ <%= Number(v.total).toFixed(2) %></td>
+                <td>
+                    <ul class="mb-0">
+                        <% (v.VentaProductos || []).forEach(item=> { %>
+                        <li><%= item.Producto?.nombre %> x<%= item.cantidad %></li>
+                        <% }) %>
+                    </ul>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<section class="panel bg-white rounded shadow-sm p-4">
+    <header class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="bi bi-person-gear"></i> Usuarios admin</h2>
+        <button id="btn-nuevo-admin" class="btn btn-success">
+            <i class="bi bi-person-plus"></i> Crear admin
+        </button>
+    </header>
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Email</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% admins.forEach(a=> { %>
+            <tr>
+                <td><%= a.email %></td>
+                <td class="text-end">
+                    <button data-id="<%= a.id %>" class="btn btn-sm btn-outline-danger btn-eliminar-admin">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('../partials/footer') %>
