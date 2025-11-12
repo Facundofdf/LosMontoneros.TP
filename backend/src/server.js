@@ -81,20 +81,6 @@ console.log(`🖼  Motor de vistas: ${process.env.VIEW_ENGINE}`);
 console.log(`📁 Directorio de vistas: ${viewsPath}`);
 
 // ===============================
-// 🧭 Cargar vistas dinámicamente
-// ===============================
-const viewRoutes = process.env.VIEW_ROUTES?.split(',').map(v => v.trim()) || [];
-for (const viewName of viewRoutes) {
-    try {
-        const module = await import(`./routes/${viewName}ViewRoutes.js`);
-        app.use(`/${viewName}`, module.default);
-        console.log(`✅ Vista registrada: /${viewName}`);
-    } catch (err) {
-        console.warn(`⚠️  No se pudo cargar la vista /${viewName}: ${err.message}`);
-    }
-}
-
-// ===============================
 // 🌐 Servir archivos estáticos (CSS/JS) del Panel Admin
 // ===============================
 const publicPath = path.resolve(__dirname, '../public');
@@ -132,7 +118,7 @@ app.get('*', (req, res) => {
 async function startServer() {
     try {
         // Sincroniza la BD sin eliminar tablas existentes
-        await sequelize.sync();
+        await sequelize.sync({alter: true});
         console.log('💾 Base de datos sincronizada (sin eliminar datos)');
 
         // Verificar si existe el usuario admin por defecto

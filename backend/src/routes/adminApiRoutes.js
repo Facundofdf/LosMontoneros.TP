@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authAdminView from "../middlewares/authAdminView.js";
+import { upload } from "../middlewares/upLoadImage.js";
 
 // Controladores de productos (nuevo)
 import {
@@ -21,8 +22,10 @@ const router = Router();
 router.use(authAdminView);
 
 // Productos
-router.post("/productos", crearProducto);
-router.put("/productos/:id", actualizarProducto);
+router.post("/productos", upload.single('imagen'), crearProducto);
+// router.post("/productos", crearProducto);
+router.put("/productos/:id", upload.single('imagen'), actualizarProducto);
+// router.put("/productos/:id", actualizarProducto);
 router.patch("/productos/:id/toggle", toggleProductoActivo);
 router.delete("/productos/:id", eliminarProducto);
 

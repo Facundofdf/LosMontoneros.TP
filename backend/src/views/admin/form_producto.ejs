@@ -9,7 +9,7 @@
     </p>
 </header>
 
-<form id="productoForm" class="card shadow-sm p-4">
+<form id="productoForm" class="card shadow-sm p-4" enctype="multipart/form-data">
     <div class="mb-3">
         <label class="form-label">Nombre</label>
         <input type="text" name="nombre" class="form-control" value="<%= producto?.nombre || '' %>" required>
@@ -28,7 +28,11 @@
 
     <div class="mb-3">
         <label class="form-label">Imagen (URL)</label>
-        <input type="text" name="imagen" class="form-control" value="<%= producto?.imagen || '' %>">
+        <input type="file" name="imagen" class="form-control">
+        <% if (producto && producto.imagen) { %>
+            <img src="<%= producto.imagen %>" alt="Imagen actual" class="img-thumbnail mt-2" width="150">
+            <p class="form-text">Dejar el campo de archivo vacío para conservar esta imagen.</p>
+            <% } %>
     </div>
 
     <div class="mb-3">
@@ -54,25 +58,22 @@
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-
-            const data = Object.fromEntries(new FormData(form).entries());
-            const isEdit = !!<%- producto ? 1 : 0 %>;
-
+            const formData = new FormData(form);
+            const isEdit = !!<%= producto ? 1 : 0 %>;
 
             const url = isEdit
                 ? `/api/admin/productos/<%= producto?.id %>`
                 : `/api/admin/productos`;
-
-            const method = isEdit ? "PUT" : "POST";
+                
+            let method = isEdit ? "PUT" : "POST";
 
             try {
                 const res = await fetch(url, {
-                    method,
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
+                    method: method,
+                    body: formData,
                 });
 
-                const result = await res.json();
+                const result = await res.json(); // Tu backend responderá JSON
 
                 if (res.ok) {
                     await Swal.fire({
@@ -81,7 +82,7 @@
                         text: result.message || "Producto guardado correctamente",
                         confirmButtonColor: "#3085d6",
                     });
-                    window.location.href = "/admin/dashboard";
+                    window.location.href = "/admin/dashboard"; // Redirigir al dashboard
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -91,10 +92,11 @@
                     });
                 }
             } catch (err) {
+                console.error(err); // Mostrar el error real en consola
                 Swal.fire({
                     icon: "error",
-                    title: "Error interno",
-                    text: "Ocurrió un error en el servidor.",
+                    title: "Error de Red",
+                    text: "No se pudo conectar con el servidor."
                 });
             }
         });

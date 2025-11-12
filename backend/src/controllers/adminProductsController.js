@@ -1,9 +1,26 @@
 import { Producto } from "../associations.js";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const PUBLIC_ROOT = path.join(__dirname, '../../public');
+
+const RUTA_BASE_IMAGENES = "/uploads/";
 
 // Crear producto
 export async function crearProducto(req, res) {
   try {
-    const { nombre, descripcion, precio, imagen, categoria } = req.body;
+    const { nombre, descripcion, precio, categoria } = req.body;
+
+    if (!req.file){
+      return res.status(400).json({error: "La imagen es obligatoria."});
+    }
+
+    const imagenUrl = RUTA_BASE_IMAGENES + req.file.filename;
+
     if (!nombre || !precio)
       return res.status(400).json({ error: "Nombre y precio son obligatorios" });
 
@@ -11,7 +28,7 @@ export async function crearProducto(req, res) {
       nombre,
       descripcion,
       precio: parseFloat(precio),
-      imagen,
+      imagen: imagenUrl,
       categoria,
       activo: true,
     });
@@ -27,19 +44,25 @@ export async function crearProducto(req, res) {
 export async function actualizarProducto(req, res) {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, precio, imagen, categoria } = req.body;
+    const { nombre, descripcion, precio, categoria } = req.body;
 
     const producto = await Producto.findByPk(id);
     if (!producto)
       return res.status(404).json({ error: "Producto no encontrado" });
 
-    await producto.update({
+    const datosParaActualizar = {
       nombre,
       descripcion,
       precio: parseFloat(precio),
-      imagen,
       categoria,
-    });
+    };
+
+    if(req.file){
+      const imagenUrl = RUTA_BASE_IMAGENES + req.file.filename;
+      datosParaActualizar.imagen = imagenUrl;
+    }
+
+    await producto.update(datosParaActualizar);
 
     res.json({ message: "Producto actualizado", producto });
   } catch (err) {
@@ -74,10 +97,22 @@ export async function eliminarProducto(req, res) {
   try {
     const { id } = req.params;
     const producto = await Producto.findByPk(id);
-    if (!producto)
+    if (!producto){
       return res.status(404).json({ error: "Producto no encontrado" });
-
+    }
+    const imagePathInDB = producto.imagen;
     await producto.destroy();
+    if(imagePathInDB){
+      const relativeImagePath = imagePathInDB.substring(1);
+      const fullPath = path.join(PUBLIC_ROOT, relativeImagePath);
+      fs.unlink(fullPath, (err) => {
+        if(err){
+          console.error(`Error al eliminar archivo de imagen: ${fullPath}`, err);
+        } else {
+          console.log(`✅ Imagen eliminada: ${fullPath}`);
+        }
+      });
+    }
     res.json({ message: "Producto eliminado correctamente" });
   } catch (err) {
     console.error("Error al eliminar producto:", err);

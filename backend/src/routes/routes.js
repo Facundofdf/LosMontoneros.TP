@@ -25,11 +25,19 @@ router.use("/api/ventas", ventasRoutes);
 // ==========================
 // Manejador de errores
 // ==========================
-router.use("*", (req, res) => {
-  res.status(404).json({
-    error: "Ruta no encontrada",
-    path: req.originalUrl,
-  });
+// backend/src/routes/routes.js (AL FINAL - CORREGIDO)
+
+// ==========================
+// Manejador de errores
+// ==========================
+router.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({
+      error: "Ruta API no encontrada",
+      path: req.originalUrl,
+    });
+  }
+  next();
 });
 
 export default router;
