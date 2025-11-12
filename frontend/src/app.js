@@ -194,14 +194,6 @@ function route(path) {
         onReturn: () => navigate("/productos"),
       });
       break;
-    case "/login":
-      mountLogin(currentViewContainer, {
-          onSuccess: () => {
-            navigate("/dashboard");
-          },
-          onVolver: restartApp
-      });
-      break;
     case "/dashboard":
       mountMaintenance(currentViewContainer, {
         error: "¡Bienvenido, Admin! Dashboard en construcción.",

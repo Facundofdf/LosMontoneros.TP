@@ -12,6 +12,7 @@ import './associations.js';
 import bcrypt from 'bcrypt';
 import UsuarioAdmin from './models/UsuarioAdmin.js';
 import expressLayouts from 'express-ejs-layouts';
+import methodOverride from 'method-override';
 
 // ===============================
 // 🔧 Cargar configuración .env
@@ -31,6 +32,7 @@ console.log('🧭 Entorno:', process.env.NODE_ENV);
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 // ===============================
 // 🌍 Configuración CORS
@@ -90,9 +92,17 @@ for (const viewName of viewRoutes) {
 }
 
 // ===============================
+// 🌐 Servir archivos estáticos (CSS/JS) del Panel Admin
+// ===============================
+const publicPath = path.resolve(__dirname, '../public');
+app.use(express.static(publicPath));
+console.log(`📦 Sirviendo archivos estáticos de admin desde: ${publicPath}`);
+
+// ===============================
 // 📡 Rutas API
 // ===============================
 import apiRoutes from './routes/routes.js';
+app.use('/admin', (await import('./routes/adminViewRoutes.js')).default);
 app.use('/api', apiRoutes);
 
 // ===============================

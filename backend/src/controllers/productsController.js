@@ -1,6 +1,5 @@
 import Producto from '../models/Producto.js';
 
-// Controlador básico
 export const listProducts = async (req, res) => {
     const { categoria, pagina = 1, limite = 8 } = req.query;
 

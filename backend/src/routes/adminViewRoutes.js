@@ -7,7 +7,8 @@ import { login } from '../controllers/adminController.js';
 import {
   renderLogin,
   renderDashboard,
-  renderProductoForm
+  renderProductoForm,
+  cargarProducto
 } from '../controllers/adminViewController.js';
 
 const router = Router();
@@ -25,6 +26,6 @@ router.use(authAdminView);
 // Vistas protegidas
 router.get('/dashboard', renderDashboard);
 router.get('/productos/nuevo', renderProductoForm);
-router.get('/productos/:id/editar', renderProductoForm);
+router.get('/productos/:id/editar', cargarProducto, renderProductoForm);
 
 export default router;
