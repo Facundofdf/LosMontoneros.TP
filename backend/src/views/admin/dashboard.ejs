@@ -1,26 +1,5 @@
 <%- include('../partials/header', { title: 'Dashboard' }) %>
 
-    <section class="metrics d-flex flex-wrap gap-3 mb-4">
-        <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
-            <span>Productos activos</span>
-            <strong class="fs-4 text-primary">
-                <%= totales.activos %>
-            </strong>
-        </div>
-        <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
-            <span>Ventas</span>
-            <strong class="fs-4 text-primary">
-                <%= totales.ventas %>
-            </strong>
-        </div>
-        <div class="metric-card bg-white rounded shadow-sm p-3 flex-fill text-center">
-            <span>Usuarios admin</span>
-            <strong class="fs-4 text-primary">
-                <%= totales.admins %>
-            </strong>
-        </div>
-    </section>
-
     <section class="panel bg-white rounded shadow-sm p-4 mb-4">
         <header class="d-flex justify-content-between align-items-center mb-3">
             <h2><i class="bi bi-box-seam"></i> Productos</h2>
@@ -28,12 +7,13 @@
                 <i class="bi bi-plus-lg"></i> Nuevo
             </button>
         </header>
-        <table class="table table-hover align-middle">
+
+        <table class="table table-hover align-middle" id="tabla-productos">
             <thead class="table-light">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
+                    <th data-col="nombre" class="sortable">Nombre</th>
+                    <th data-col="categoria" class="sortable">Categoría</th>
+                    <th data-col="precio" class="sortable">Precio</th>
                     <th>Estado</th>
                     <th class="text-end">Acciones</th>
                 </tr>
@@ -44,7 +24,7 @@
                         <td>
                             <%= p.nombre %>
                         </td>
-                        <td>
+                        <td class="text-capitalize">
                             <%= p.categoria %>
                         </td>
                         <td>$ <%= Number(p.precio).toFixed(2) %>
@@ -70,6 +50,7 @@
             </tbody>
         </table>
     </section>
+
 
     <section class="panel bg-white rounded shadow-sm p-4 mb-4">
         <header class="d-flex align-items-center mb-3">
@@ -142,4 +123,3 @@
     </section>
 
     <%- include('../partials/footer') %>
- 

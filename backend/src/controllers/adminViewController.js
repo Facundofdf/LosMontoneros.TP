@@ -15,24 +15,26 @@ export const renderLogin = (req, res) => {
 export const renderDashboard = async (req, res) => {
     try {
         const [productos, ventas, admins] = await Promise.all([
-            Producto.findAll(),
+            Producto.findAll({
+                order: [["categoria", "ASC"], ["nombre", "ASC"]],
+            }),
             Venta.findAll({
                 include: [
                     {
                         model: VentaProducto,
                         as: "ventaProductos",
-                        include: [{ model: Producto, as: "producto" }]
-                    }
+                        include: [{ model: Producto, as: "producto" }],
+                    },
                 ],
-                order: [["fecha", "DESC"]]
+                order: [["fecha", "DESC"]],
             }),
-            UsuarioAdmin.findAll()
+            UsuarioAdmin.findAll(),
         ]);
 
         const totales = {
-            activos: productos.filter(p => p.activo).length,
+            activos: productos.filter((p) => p.activo).length,
             ventas: ventas.length,
-            admins: admins.length
+            admins: admins.length,
         };
 
         res.render("admin/dashboard", {
@@ -41,7 +43,7 @@ export const renderDashboard = async (req, res) => {
             productos,
             ventas,
             admins,
-            totales
+            totales,
         });
     } catch (err) {
         console.error("Error al renderizar dashboard:", err);
@@ -118,33 +120,33 @@ export const renderUsuarios = async (req, res) => {
 };
 
 export const renderUsuarioForm = (req, res) => {
-  res.render("admin/form_usuario", {
-    layout: "admin/layout",
-    title: "Nuevo administrador",
-    usuario: null,
-    error: null
-  });
+    res.render("admin/form_usuario", {
+        layout: "admin/layout",
+        title: "Nuevo administrador",
+        usuario: null,
+        error: null
+    });
 };
 
 /** Formulario de edición de administrador */
 export const renderEditarAdmin = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const admin = await UsuarioAdmin.findByPk(id);
+    try {
+        const { id } = req.params;
+        const admin = await UsuarioAdmin.findByPk(id);
 
-    if (!admin) {
-      console.warn(`Intento de editar admin no existente: ${id}`);
-      return res.redirect("/admin/usuarios");
+        if (!admin) {
+            console.warn(`Intento de editar admin no existente: ${id}`);
+            return res.redirect("/admin/usuarios");
+        }
+
+        res.render("admin/form_usuario", {
+            layout: "admin/layout",
+            title: "Editar administrador",
+            usuario: admin,
+            error: null
+        });
+    } catch (err) {
+        console.error("Error al cargar admin para edición:", err);
+        res.redirect("/admin/usuarios");
     }
-
-    res.render("admin/form_usuario", {
-      layout: "admin/layout",
-      title: "Editar administrador",
-      usuario: admin,
-      error: null
-    });
-  } catch (err) {
-    console.error("Error al cargar admin para edición:", err);
-    res.redirect("/admin/usuarios");
-  }
 };
