@@ -1,15 +1,26 @@
-<section class="productos-container">
-    <h2>Nuestros Productos</h2>
-    
-    <div class="filtros">
-        <button class="filtro-btn" data-categoria="todos">Todos</button>
-        <button class="filtro-btn" data-categoria="categoria1">Categoría 1</button>
-        <button class="filtro-btn" data-categoria="categoria2">Categoría 2</button>
-    </div>
-    
-    <div id="product-list" class="row">
+<section class="productos-layout">
+    <!-- COLUMNA IZQUIERDA: Categorías -->
+    <aside class="productos-categorias">
+        <h3>Categorías</h3>
+        <ul id="categoria-list">
+            <li data-categoria="todos" class="active">Todos</li>
+            <li data-categoria="curso">Cursos</li>
+            <li data-categoria="ebook">Ebooks</li>
+        </ul>
+    </aside>
+
+    <!-- COLUMNA CENTRAL: Productos -->
+    <main class="productos-grid" id="product-list">
+        <!-- Las tarjetas se insertan dinámicamente -->
+    </main>
+
+    <!-- COLUMNA DERECHA: Carrito -->
+    <aside class="productos-carrito">
+        <h3>Mi Carrito</h3>
+        <div id="cart-items"></div>
+        <div class="cart-footer">
+            <p id="cart-total">Total: $0</p> 
+            <button onclick="window.location.href='#/carrito'" id="ver-orden" class="btn btn-primary w-100">Ver mi orden</button>
         </div>
-    
-    <nav id="pagination-controls" aria-label="Navegación de productos">
-        </nav>
+    </aside>
 </section>

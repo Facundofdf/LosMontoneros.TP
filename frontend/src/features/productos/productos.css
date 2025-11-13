@@ -1,162 +1,139 @@
-.productos-container {
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.productos-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 300px;
+  height: calc(100vh - 100px); /* Ajusta según tu header/footer */
+  overflow: hidden;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.productos-container h2 {
+/* Columna izquierda */
+.productos-categorias {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.productos-categorias h3 {
+  margin-bottom: 1rem;
   color: var(--text-color);
   text-align: center;
-  margin-bottom: 2rem;
 }
 
-/* * =================================
- * Filtros
- * =================================
- */
-.filtros {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap; /* Para que se vea bien en móviles */
-  gap: 0.5rem;
-  margin-bottom: 2rem;
+.productos-categorias ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; 
 }
 
-.filtro-btn {
-  background-color: var(--card-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+.productos-categorias li {
   padding: 0.5rem 1rem;
-  border-radius: 20px;
+  margin-bottom: 2px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  color: var(--text-color);
+  transition: background-color 0.2s;
 }
 
-.filtro-btn:hover {
+.productos-categorias li:hover,
+.productos-categorias li.active {
   background-color: var(--primary-color);
   color: var(--primary-text);
-  border-color: var(--primary-color);
 }
 
-/* * =================================
- * Tarjetas de Producto (Card)
- * =================================
- */
+/* Columna central */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--card-bg);
+}
 
-/* Asumimos que estás usando Bootstrap para .row y .col-md-4.
-  Estos estilos son para la .card interna.
-*/
+/* Tarjeta de producto */
 .card {
   background-color: var(--card-bg);
+  height: auto;
+  max-height: 420px;
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-
-[data-theme="dark"] .card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.card .card-title {
-  color: var(--text-color);
-}
-
-.card .card-text {
-  color: var(--text-color);
-  font-size: 1.15rem;
-  font-weight: bold;
-}
-
-.card .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: var(--primary-text);
-}
-
-.card .btn-primary:hover {
-  opacity: 0.9;
-}
-
-
-/* * =================================
- * Paginación
- * =================================
- */
-#pagination-controls {
+  border-radius: 10px;
   display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+  flex-direction: column;
+  transition: transform 0.2s;
+
+  .name{ 
+  }
+
+  .description{ 
+    height: 100px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-width: none;
+  }
+ 
 }
 
-.pagination .page-item {
-  margin: 0 2px;
+.card:hover {
+  transform: translateY(-3px);
 }
 
-.pagination .page-link {
+.card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-body {
+  flex-grow: 1;
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+/* Columna derecha */
+.productos-carrito {
   background-color: var(--card-bg);
-  color: var(--link-color);
   border: 1px solid var(--border-color);
-  transition: background-color 0.2s, color 0.2s;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
-.pagination .page-link:hover {
-  background-color: var(--border-color);
-  color: var(--link-hover);
+.productos-carrito h3 {
+  text-align: center;
+  color: var(--text-color);
+  margin-bottom: 1rem;
 }
 
-.pagination .page-item.active .page-link {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: var(--primary-text);
+#cart-items {
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
-.pagination .page-item.disabled .page-link {
-  background-color: var(--card-bg);
-  color: #888;
-  border-color: var(--border-color);
+.cart-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
 }
 
-[data-theme="dark"] .pagination .page-item.disabled .page-link {
-  color: #555;
+.cart-footer p {
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
 }
 
-.productos-container .card {
-    height: 100%; /* Ajuste para que la tarjeta ocupe el espacio de su columna */
-}
-
-.productos-container .card-img-top {
-    width: 100%;       /* Ocupa todo el ancho disponible de la tarjeta */
-    height: 200px;     /* <--- ALTURA FIJA: Define la altura que deseas para todas las imágenes */
-    object-fit: cover; /* <--- CLAVE: Recorta la imagen para que cubra el área sin distorsionarla */
-    object-position: center center; /* Centra la imagen dentro del contenedor */
-    background-color: #f0f0f0;  /* Para ver el fondo si la imagen no carga o es transparente */
-    border-bottom: 1px solid #eee;
-}
-
-.productos-container .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Empuja el botón al final si hay espacio */
-    padding: 15px;
-}
-
-/* Asegura que la descripción no tome demasiado espacio si es muy larga */
-.productos-container .card-title + .card-text {
-    font-size: 0.9rem;     /* Letra más chica (aprox 14px si tu base es 16px) */
-    font-weight: 400;      /* Peso normal (400 es el estándar, no-negrita) */
-    color: #6c757d;      /* Un color gris (secundario) para que no sea tan fuerte */
-    margin-bottom: 1rem;
-}
-
-/* Asegura que el precio tenga espacio y el botón se alinee bien */
-.productos-container .card-text.mt-auto {
-    margin-top: auto !important; /* Mantiene el margin-top auto para empujar hacia abajo */
-    margin-bottom: 10px !important; /* Espacio antes del botón */
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.productos-container .btn-agregar {
-    width: 100%;
+/* Scroll suave */
+.productos-categorias,
+.productos-grid,
+.productos-carrito {
+  scrollbar-width: thin;
 }

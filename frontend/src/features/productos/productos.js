@@ -1,132 +1,175 @@
-let currentCategoria = null;
-let currentPage = 1;
-let propsGlobales = {}; // Para guardar las 'props' (ej: onAgregar)
+let propsGlobales = {};
+let productosCache = [];
+let carrito = {}; // { id: { producto, cantidad } }
 
-// 1. Cargar y Renderizar Datos
-async function cargarProductos(categoria = null, page = 1) {
-    currentCategoria = categoria;
-    currentPage = page;
-    
-    let url = `/api/productos?page=${page}&limit=9`; 
-    if (categoria) url += `&categoria=${categoria}`;
+// 🧠 Guardar carrito en localStorage
+function guardarCarrito() {
+    const items = Object.values(carrito).map(({ producto, cantidad }) => ({
+        id: producto.id,
+        cantidad
+    }));
+    localStorage.setItem('carrito', JSON.stringify(items));
+}
+
+// 🧠 Cargar carrito desde localStorage
+function cargarCarrito() {
+    const data = localStorage.getItem('carrito');
+    if (!data) return;
+    try {
+        const items = JSON.parse(data);
+        items.forEach(({ id, cantidad }) => {
+            const producto = productosCache.find(p => p.id == id);
+            if (producto) carrito[id] = { producto, cantidad };
+        });
+    } catch (e) {
+        console.error('Error al cargar carrito:', e);
+    }
+}
+
+// 🔄 Cargar productos
+async function cargarProductos(categoria = null) {
+    let url = '/api/productos';
+    if (categoria && categoria !== 'todos') url += `?categoria=${categoria}`;
 
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Error en la API');
-        
+        if (!response.ok) throw new Error('Error al cargar productos');
         const data = await response.json();
-        renderProductos(data.productos);
-        renderPaginacion(data.totalPages, data.currentPage);
-        
-    } catch (error) {
-        console.error('Error al cargar productos: ', error);
-        const productList = document.getElementById('product-list');
-        if (productList) {
-            productList.innerHTML = `<p class="text-danger">Error al cargar productos.</p>`;
-        }
+        productosCache = data.productos;
+        renderProductos(productosCache);
+
+        // 👇 Después de tener los productos disponibles, restauramos el carrito
+        cargarCarrito();
+        renderCarrito();
+    } catch (err) {
+        console.error(err);
     }
 }
 
-// 2. "Pintar" Productos
+// 🧱 Renderizar productos
 function renderProductos(productos) {
-    const productList = document.getElementById('product-list');
-    if (!productList) return; 
-    
-    productList.innerHTML = '';
-    
+    const container = document.getElementById('product-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    productos.forEach(p => {
+        container.innerHTML += `
+      <div class="card">
+        <img src="${p.imagen || 'https://placehold.co/300x200'}" alt="${p.nombre}">
+        <div class="card-body">
+          <h5 class="name">${p.nombre}</h5>
+          <p class="description">${p.descripcion || ''}</p>
+          <p class="price"><strong>$${p.precio.toLocaleString()}</strong></p>
+          <button class="btn btn-primary btn-agregar" data-id="${p.id}">Agregar</button>
+        </div>
+      </div>
+    `;
+    });
+}
+
+// 🛒 Renderizar carrito
+function renderCarrito() {
+    const contenedor = document.getElementById('cart-items');
+    const totalElem = document.getElementById('cart-total');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = '';
+
+    const productos = Object.values(carrito);
     if (productos.length === 0) {
-        productList.innerHTML = '<p class="col-12 text-center">No se encontraron productos para esta categoría.</p>';
+        contenedor.innerHTML = '<p class="text-center text-muted">Carrito vacío</p>';
+        if (totalElem) totalElem.textContent = 'Total: $0';
         return;
     }
-    
-    productos.forEach(producto => {
-        // Usamos los estilos de .card que definimos en el CSS
-        const cardHtml = `
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <img src="${producto.imagen || 'https://placehold.co/600x400/eee/aaa?text=Sin+Imagen'}" class="card-img-top" alt="${producto.nombre}">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${producto.nombre}</h5>
-                        <p class="card-text">${producto.descripcion || ''}</p>
-                        <p class="card-text mt-auto mb-2">$${producto.precio.toFixed(2)}</p>
-                        <button class="btn btn-primary btn-agregar" data-product-id="${producto.id}">Agregar</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        productList.innerHTML += cardHtml;
+
+    let total = 0;
+    productos.forEach(({ producto, cantidad }) => {
+        const subtotal = producto.precio * cantidad;
+        total += subtotal;
+
+        contenedor.innerHTML += `
+      <div class="cart-item">
+        <div>
+          <strong>${producto.nombre}</strong><br>
+          <small>${cantidad} x $${producto.precio.toLocaleString()}</small>
+        </div>
+        <div class="cart-actions">
+          <button class="btn btn-sm btn-light btn-mas" data-id="${producto.id}">+</button>
+          <button class="btn btn-sm btn-light btn-menos" data-id="${producto.id}">−</button>
+          <button class="btn btn-sm btn-danger btn-remove" data-id="${producto.id}">×</button>
+        </div>
+      </div>
+    `;
     });
+
+    if (totalElem) totalElem.textContent = `Total: $${total.toLocaleString()}`;
 }
 
-// 3. "Pintar" Paginación
-function renderPaginacion(totalPages, pageActual) {
-    const paginationControls = document.getElementById('pagination-controls');
-    if (!paginationControls) return;
+// ➕ Agregar producto al carrito
+function agregarAlCarrito(id) {
+    const producto = productosCache.find(p => p.id == id);
+    if (!producto) return;
 
-    paginationControls.innerHTML = '';
-    if (totalPages <= 1) return;
+    if (!carrito[id]) carrito[id] = { producto, cantidad: 0 };
+    carrito[id].cantidad++;
 
-    let ul = '<ul class="pagination">';
-    for (let i = 1; i <= totalPages; i++) {
-        ul += `<li class="page-item ${i === pageActual ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-    }
-    ul += '</ul>';
-    paginationControls.innerHTML = ul;
+    guardarCarrito(); // 🔒 Guardar en localStorage
+    renderCarrito();
+
+    propsGlobales.onAgregar?.(id); // mantiene compatibilidad
 }
 
-// 4. Asignar Event Listeners (¡Clave!)
-function attachEventListeners() {
-    // Filtros
-    // Usamos '?' (optional chaining) por si el elemento no existe
-    const filtrosContainer = document.querySelector('.filtros');
-    filtrosContainer?.addEventListener('click', (e) => {
-        if (e.target.classList.contains('filtro-btn')) {
-            const categoria = e.target.dataset.categoria;
-            cargarProductos(categoria === 'todos' ? null : categoria, 1);
+// ⚙️ Eventos
+function attachEvents() {
+    // Categorías
+    document.getElementById('categoria-list')?.addEventListener('click', e => {
+        if (e.target.tagName === 'LI') {
+            document.querySelectorAll('#categoria-list li').forEach(li => li.classList.remove('active'));
+            e.target.classList.add('active');
+            cargarProductos(e.target.dataset.categoria);
         }
     });
 
-    // Paginación
-    const paginationControls = document.getElementById('pagination-controls');
-    paginationControls?.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (e.target.dataset.page) {
-            cargarProductos(currentCategoria, parseInt(e.target.dataset.page));
-        }
-    });
-    
-    // Botones "Agregar" (Usando delegación)
-    const productList = document.getElementById('product-list');
-    productList?.addEventListener('click', (e) => {
+    // Botones "Agregar"
+    document.getElementById('product-list')?.addEventListener('click', e => {
         if (e.target.classList.contains('btn-agregar')) {
-            const productId = e.target.dataset.productId;
-            if (propsGlobales.onAgregar) {
-                propsGlobales.onAgregar(productId);
-            }
+            agregarAlCarrito(e.target.dataset.id);
         }
+    });
+
+    // Acciones del carrito (+, -, eliminar)
+    document.getElementById('cart-items')?.addEventListener('click', e => {
+        const id = e.target.dataset.id;
+        if (!id) return;
+
+        if (e.target.classList.contains('btn-mas')) {
+            carrito[id].cantidad++;
+        } else if (e.target.classList.contains('btn-menos')) {
+            carrito[id].cantidad--;
+            if (carrito[id].cantidad <= 0) delete carrito[id];
+        } else if (e.target.classList.contains('btn-remove')) {
+            delete carrito[id];
+        }
+
+        guardarCarrito(); // 🔒 Persistir cambios
+        renderCarrito();
     });
 }
 
-// --- Función de Montaje (MODIFICADA para seguir tu patrón) ---
-
+// 🚀 Montaje de la vista de productos
 export function mountProductos(container, props) {
-    propsGlobales = props || {}; // Guardar las props (ej: onAgregar)
+    propsGlobales = props || {};
 
     Promise.all([
-        // Ajusta las rutas si son diferentes
         fetch('./features/productos/productos.html').then(r => r.text()),
         fetch('./features/productos/productos.css').then(r => r.text())
     ])
-    .then(([html, css]) => {
-        // 1. Inyectar el CSS y el HTML (¡Igual que welcome.js!)
-        container.innerHTML = `<style>${css}</style>${html}`;
-        
-        // 2. Ejecutar la lógica DESPUÉS de que el DOM esté listo
-        cargarProductos(); // Carga los datos iniciales
-        attachEventListeners(); // Asigna todos los listeners
-    })
-    .catch(err => {
-        console.error('Fallo el montaje de productos:', err);
-        container.innerHTML = `<p>Error al cargar la sección de productos. ${err.message}</p>`;
-    });
+        .then(([html, css]) => {
+            container.innerHTML = `<style>${css}</style>${html}`;
+            cargarProductos(); // Esto también cargará el carrito una vez los productos estén listos
+            attachEvents();
+        })
+        .catch(err => {
+            container.innerHTML = `<p>Error al montar productos: ${err.message}</p>`;
+        });
 }
