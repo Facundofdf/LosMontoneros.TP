@@ -13,6 +13,7 @@ import {
   renderUsuarios,
   renderUsuarioForm,
   renderEditarAdmin,
+  renderRegistros
 } from "../controllers/adminViewController.js";
 
 import {
@@ -43,6 +44,9 @@ router.get("/productos/:id/editar", cargarProducto, renderProductoForm);
 
 // Ventas
 router.get("/ventas", renderVentas);
+
+//Registros
+router.get("/registros", renderRegistros);
 
 // Usuarios administradores
 router.get("/usuarios", renderUsuarios);

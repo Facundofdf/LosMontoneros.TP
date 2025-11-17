@@ -1,5 +1,6 @@
 // Variable para guardar las props (función onRemove)
 let propsGlobales = {};
+let detailedCartData = [];
 
 // --- Funciones de Renderizado ---
 
@@ -115,6 +116,7 @@ async function loadCartData() {
     }); // Esperamos a que todas las promesas se resuelvan
 
     const detailedCart = await Promise.all(fetchPromises); // 5. Renderizar el contenido
+    detailedCartData = detailedCart;
 
     renderCartItems(detailedCart, itemsContainer);
     renderSummary(detailedCart, totalEl); // 6. Mostrar el contenido y ocultar la carga
@@ -124,6 +126,69 @@ async function loadCartData() {
   } catch (error) {
     console.error("Error al cargar detalles del carrito:", error);
     loadingEl.innerHTML = `<p class="text-danger">Error al cargar el carrito. ${error.message}</p>`;
+  }
+}
+
+async function handleConfirmarCompra(modal) {
+  const btnConfirmar = document.getElementById('btn-confirmar-compra');
+  btnConfirmar.disabled = true; // Deshabilitamos el botón
+  btnConfirmar.innerHTML = 'Procesando...'; // Cambiamos el texto
+
+  try {
+    // 1. Preparamos los datos para la API
+    const clienteNombre = localStorage.getItem("user_name") || "Consumidor Final";
+    
+    // 2. Mapeamos los datos al formato que espera el backend
+    const productosParaApi = detailedCartData.map(item => ({
+      productoId: item.id,
+      cantidad: item.cantidad,
+      precioUnitario: item.precio // El backend espera 'precioUnitario'
+    }));
+
+    // 3. Creamos el body del fetch
+    const body = JSON.stringify({
+      clienteNombre: clienteNombre,
+      productos: productosParaApi
+    });
+
+    // 4. Hacemos el fetch a la API de ventas
+    const response = await fetch('/api/ventas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'Error al registrar la venta');
+    }
+
+    // 5. ¡Éxito! Si la venta se registró, limpiamos el carrito
+    localStorage.removeItem("carrito"); 
+    // (Opcional: podemos llamar a la función de app.js si existe)
+    if (propsGlobales.onClearCart) {
+        propsGlobales.onClearCart();
+    }
+
+    // 6. Ocultamos el modal y navegamos al ticket
+    modal.hide();
+    window.location.hash = '/ticket';
+
+  } catch (err) {
+    console.error("Error al confirmar la compra:", err);
+    // Si falla, volvemos a habilitar el botón y mostramos un error
+    btnConfirmar.disabled = false;
+    btnConfirmar.innerHTML = 'Confirmar';
+    
+    // (Opcional pero recomendado: mostrar el error al usuario)
+    const modalBody = document.querySelector('#confirmarCompraModal .modal-body');
+    modalBody.innerHTML = `<p class="text-danger">Error: ${err.message}</p>`;
+    // Le damos 3 segundos para leer el error antes de resetear el texto
+    setTimeout(() => {
+        modalBody.innerHTML = '¿Estás seguro de que deseas finalizar tu compra?';
+    }, 3000);
   }
 }
 
@@ -166,6 +231,7 @@ export function mountCarrito(container, props) {
         // 7. Asignar evento para CONFIRMAR e ir al Ticket
         if (btnConfirmarCompra) {
           btnConfirmarCompra.addEventListener('click', () => {
+            handleConfirmarCompra(confirmarModal);
             // Opcional: ocultar el modal antes de navegar
             confirmarModal.hide();
             // Redirigir a la pantalla de ticket

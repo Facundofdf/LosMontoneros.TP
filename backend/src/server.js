@@ -64,12 +64,12 @@ app.use(session({
 app.use(setLocalsAdmin);
 
 const viewsPath = path.resolve(__dirname, '..', process.env.VIEWS_PATH);
-app.set('views', viewsPath);
-app.set('view engine', process.env.VIEW_ENGINE || 'ejs');
+app.set('views', viewsPath); // Le dice a Express dónde está la carpeta 'views'
+app.set('view engine', process.env.VIEW_ENGINE || 'ejs'); // Activa EJS
 
 // Configuración de express-ejs-layouts
-app.use(expressLayouts);
-app.set('layout', 'admin/layout'); // layout por defecto para las vistas admin
+app.use(expressLayouts); // Activa los layouts (plantillas maestras)
+app.set('layout', 'admin/layout'); // Define el layout por defecto
 
 // Middleware para variable global en todas las vistas
 app.use((req, res, next) => {
@@ -118,7 +118,7 @@ app.get('*', (req, res) => {
 async function startServer() {
     try {
         // Sincroniza la BD sin eliminar tablas existentes
-        await sequelize.sync({alter: true});
+        await sequelize.sync();
         console.log('💾 Base de datos sincronizada (sin eliminar datos)');
 
         // Verificar si existe el usuario admin por defecto

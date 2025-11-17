@@ -1,5 +1,6 @@
 // backend/src/controllers/adminViewController.js
-import { Producto, Venta, UsuarioAdmin, VentaProducto } from "../associations.js";
+import { sequelize } from "../config/database.js";
+import { Producto, Venta, UsuarioAdmin, VentaProducto, LoginLog } from "../associations.js";
 
 /** Vista de login */
 export const renderLogin = (req, res) => {
@@ -148,5 +149,66 @@ export const renderEditarAdmin = async (req, res) => {
     } catch (err) {
         console.error("Error al cargar admin para edición:", err);
         res.redirect("/admin/usuarios");
+    }
+};
+
+/** Vista de Registros y Estadísticas */
+export const renderRegistros = async (req, res) => {
+    try {
+        //Top 10 Ventas Más Caras
+        const topVentas = await Venta.findAll({
+            order: [["total", "DESC"]], // Orden descendente
+            limit: 10,
+        });
+
+        //Top 10 Productos Más Vendidos
+        const topProductos = await VentaProducto.findAll({
+            attributes: [
+                "productoId",
+                [sequelize.fn("SUM", sequelize.col("cantidad")), "totalVendido"],
+            ],
+            group: ["productoId", "producto.id", "producto.nombre"],
+            order: [[sequelize.literal("totalVendido"), "DESC"]],
+            limit: 10,
+            include: [
+                {
+                    model: Producto,
+                    as: "producto", // Usamos el 'as' de la asociación
+                    attributes: ["nombre"], // Solo el nombre
+                },
+            ],
+        });
+
+        //Log de Inicios de Sesión
+        const loginLogs = await LoginLog.findAll({
+            include: [{
+                model: UsuarioAdmin, // Incluimos UsuarioAdmin
+                attributes: ["email"]  // para ver su email
+            }],
+            order: [["fecha", "DESC"]], // Los más recientes primero
+            limit: 20, //límite de 20
+        });
+
+        // Otras 2 estadísticas...
+        // Total de ventas
+        const totalVentas = await Venta.count();
+        // Total de productos registrados
+        const totalProductos = await Producto.count();
+
+        res.render("admin/registros", { // Renderiza la nueva vista
+            layout: "admin/layout",
+            title: "Registros y Estadísticas",
+            // ¡Pasamos todos los datos a la vista EJS!
+            topVentas: topVentas,
+            topProductos: topProductos,
+            loginLogs: loginLogs,
+            stats: { // Pasamos las estadísticas extra en un objeto
+                totalVentas: totalVentas,
+                totalProductos: totalProductos
+            }
+        });
+    } catch (err) {
+        console.error("Error al renderizar registros:", err);
+        res.status(500).send("Error interno del servidor");
     }
 };

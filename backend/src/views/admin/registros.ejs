@@ -1,0 +1,136 @@
+<%- include('../partials/header', { title: title }) %>
+
+    <header class="mb-4 border-bottom pb-2">
+            <h2 class="h4 mb-0"><i class="bi bi-bar-chart-line-fill me-2"></i>Registros y Estadísticas</h2>
+            <p class="text-muted mb-0">Reportes de ventas, productos y actividad.</p>
+    </header>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/api/admin/reportes/excel" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel me-1"></i>
+            Descargar Excel
+        </a>
+    </div>
+
+    <section class="row mb-4">
+            <div class="col-md-6">
+                    <div class="card shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Ventas Totales</h5>
+                                    <span class="badge bg-primary fs-5">
+                        <%= stats.totalVentas %>
+                    </span>
+                                </div>
+                        </div>
+                </div>
+            <div class="col-md-6">
+                    <div class="card shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Productos Registrados</h5>
+                                    <span class="badge bg-success fs-5">
+                        <%= stats.totalProductos %>
+                    </span>
+                                </div>
+                        </div>
+                </div>
+    </section>
+
+    <section class="card shadow-sm mb-4">
+            <div class="card-header">
+                    <h5 class="mb-0">Top 10 Productos Más Vendidos</h5>
+                </div>
+            <% if (topProductos?.length) { %>
+                    <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                    <tr>
+                                            <th>Producto</th>
+                                            <th class="text-end">Total Vendido (Uds.)</th>
+                                        </tr>
+                                </thead>
+                            <tbody>
+                                    <% topProductos.forEach(item=> { %>
+                                            <tr>
+                                                    <td>
+                                <%= item.producto?.nombre || 'Producto no disponible' %>
+                            </td>
+                                                    <td class="text-end fw-bold">
+                                <%= item.dataValues.totalVendido %>
+                            </td>
+                                                </tr>
+                                        <% }) %>
+                                        </tbody>
+                        </table>
+                <% } else { %>
+                        <div class="card-body text-center text-muted">No hay datos de productos vendidos.</div>
+                    <% } %>
+    </section>
+
+    <section class="card shadow-sm mb-4">
+            <div class="card-header">
+                    <h5 class="mb-0">Top 10 Ventas Más Caras</h5>
+                </div>
+            <% if (topVentas?.length) { %>
+                    <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                    <tr>
+                                            <th>ID Venta</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                </thead>
+                            <tbody>
+                                    <% topVentas.forEach(v=> { %>
+                                            <tr>
+                                                    <td>
+                                <%= v.id %>
+                            </td>
+                                                    <td>
+                                <%= v.clienteNombre || 'N/A' %>
+                            </td>
+                                                    <td>
+                                <%= new Date(v.fecha).toLocaleDateString() %>
+                            </td>
+                                                    <td class="text-end fw-bold">$<%= Number(v.total).toFixed(2) %>
+                            </td>
+                                                </tr>
+                                        <% }) %>
+                                        </tbody>
+                        </table>
+                <% } else { %>
+                        <div class="card-body text-center text-muted">No hay datos de ventas.</div>
+                s
+                    <% } %>
+    </section>
+
+    <section class="card shadow-sm mb-4">
+            <div class="card-header">
+                    <h5 class="mb-0">Últimos Inicios de Sesión de Administradores</h5>
+                </div>
+            <% if (loginLogs?.length) { %>
+                    <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                    <tr>
+                                            <th>Usuario Admin</th>
+                                            <th>Fecha y Hora</th>
+                                        </tr>
+                                </thead>
+                            <tbody>
+                                    <% loginLogs.forEach(log=> { %>
+                                            <tr>
+                                                    <td>
+                                <%= log.UsuarioAdmin?.email || 'Usuario no disponible' %>
+                            </td>
+                                                    <td>
+                                <%= new Date(log.fecha).toLocaleString() %>
+                            </td>
+                                                </tr>
+                                        <% }) %>
+                                        </tbody>
+                        </table>
+                <% } else { %>
+                        <div class="card-body text-center text-muted">No hay registros de inicio de sesión.</div>
+                    <% } %>
+    </section>
+
+    <%- include('../partials/footer') %>

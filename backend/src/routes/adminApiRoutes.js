@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authAdminView from "../middlewares/authAdminView.js";
 import { upload } from "../middlewares/upLoadImage.js";
+import { exportarReportes } from "../controllers/adminReportesController.js";
 
 // Controladores de productos (nuevo)
 import {
@@ -33,5 +34,7 @@ router.delete("/productos/:id", eliminarProducto);
 router.post("/usuarios", crearAdmin);
 router.put("/usuarios/:id", actualizarAdmin);
 router.delete("/usuarios/:id", eliminarAdmin);
+
+router.get("/reportes/excel", exportarReportes);
 
 export default router;

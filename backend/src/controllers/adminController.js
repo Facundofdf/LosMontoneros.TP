@@ -1,6 +1,7 @@
 //AdminController.js
 import bcrypt from "bcrypt";
 import UsuarioAdmin from "../models/UsuarioAdmin.js";
+import LoginLog from "../models/LoginLog.js";
 
 export async function login(req, res) {
     try {
@@ -30,6 +31,15 @@ export async function login(req, res) {
                 title: "Iniciar sesión",
                 error: "Credenciales inválidas",
             });
+        }
+
+        try {
+            await LoginLog.create({
+                adminId: admin.id
+            });
+            console.log(`✅ Log de inicio de sesión registrado para: ${admin.email}`);
+        } catch (logError) {
+            console.error("💥 Error al guardar el log de inicio de sesión:", logError);
         }
 
         req.session.adminId = admin.id;
