@@ -1,6 +1,6 @@
 let propsGlobales = {};
 let productosCache = [];
-let carrito = {}; // { id: { producto, cantidad } }
+let carrito = {};
 
 // 🧠 Guardar carrito en localStorage
 function guardarCarrito() {
@@ -32,7 +32,9 @@ async function cargarProductos(categoria = null) {
     if (categoria && categoria !== 'todos') url += `?categoria=${categoria}`;
 
     try {
-        const response = await fetch(url);
+        //Le pedimos los datos al servidor. Luego pausa la ejecución aquí y espera a 
+        // que el servidor responda antes de seguir a la siguiente línea.
+        const response = await fetch(url); 
         if (!response.ok) throw new Error('Error al cargar productos');
         const data = await response.json();
         productosCache = data.productos;
@@ -54,15 +56,15 @@ function renderProductos(productos) {
 
     productos.forEach(p => {
         container.innerHTML += `
-      <div class="card">
+    <div class="card">
         <img src="${p.imagen || 'https://placehold.co/300x200'}" alt="${p.nombre}">
         <div class="card-body">
-          <h5 class="name">${p.nombre}</h5>
-          <p class="description">${p.descripcion || ''}</p>
-          <p class="price"><strong>$${p.precio.toLocaleString()}</strong></p>
-          <button class="btn btn-primary btn-agregar" data-id="${p.id}">Agregar</button>
+            <h5 class="name">${p.nombre}</h5>
+            <p class="description">${p.descripcion || ''}</p>
+            <p class="price"><strong>$${p.precio.toLocaleString()}</strong></p>
+            <button class="btn btn-primary btn-agregar" data-id="${p.id}">Agregar</button>
         </div>
-      </div>
+    </div>
     `;
     });
 }

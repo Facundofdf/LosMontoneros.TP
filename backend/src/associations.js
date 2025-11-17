@@ -5,7 +5,10 @@ import VentaProducto from './models/VentaProducto.js';
 import UsuarioAdmin from './models/UsuarioAdmin.js';
 
 // Venta ↔ VentaProducto ↔ Producto
+
+// "Una Venta TIENE MUCHOS VentaProducto"
 Venta.hasMany(VentaProducto, { foreignKey: 'ventaId', as: 'ventaProductos' });
+// "Un VentaProducto PERTENECE A una Venta"
 VentaProducto.belongsTo(Venta, { foreignKey: 'ventaId', as: 'venta' });
 
 Producto.hasMany(VentaProducto, { foreignKey: 'productoId', as: 'ventaProductos' });

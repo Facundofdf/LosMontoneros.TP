@@ -12,29 +12,25 @@ function renderCartItems(detailedCart, container) {
     const itemTotal = item.precio * item.cantidad;
     const itemHtml = `
             <div class="cart-item">
-                <img src="${
-      item.imagen || "https://placehold.co/100x100/eee/aaa?text=Sin+Imagen"
-    }" alt="${item.nombre}">
+                <img src="${item.imagen || "https://placehold.co/100x100/eee/aaa?text=Sin+Imagen"
+      }" alt="${item.nombre}">
                 <div class="cart-item-info">
                     <h5>${item.nombre}</h5>
                     <p>Precio unitario: $${item.precio.toFixed(2)}</p>
                 </div>
                 <div class="cart-item-details">
                     <div class="cart-item-quantity">
-                        <button class="quantity-btn btn-decrease" data-id="${
-                          item.id
-                        }">-</button>
+                        <button class="quantity-btn btn-decrease" data-id="${item.id
+      }">-</button>
                         <span>${item.cantidad}</span>
-                        <button class="quantity-btn btn-increase" data-id="${
-                          item.id
-                        }">+</button>
+                        <button class="quantity-btn btn-increase" data-id="${item.id
+      }">+</button>
                     </div>
                     <div class="cart-item-price">
                         <strong>$${itemTotal.toFixed(2)}</strong>
                     </div>
-                    <button class="cart-item-remove" data-id="${
-      item.id
-    }">Eliminar</button>
+                    <button class="cart-item-remove" data-id="${item.id
+      }">Eliminar</button>
                 </div>
             </div>
         `;
@@ -143,9 +139,9 @@ export function mountCarrito(container, props) {
   ])
     .then(([html, css]) => {
       // 1. Inyectar CSS y HTML
-      container.innerHTML = `<style>${css}</style>${html}`; 
+      container.innerHTML = `<style>${css}</style>${html}`;
       // 2. Ejecutar la lógica principal
-      loadCartData(); 
+      loadCartData();
       // 3. Conectar listeners (usando delegación de eventos)
       const itemsContainer = document.getElementById("cart-items-container");
       if (itemsContainer) {
@@ -153,7 +149,7 @@ export function mountCarrito(container, props) {
       }
       //Inicio de logica del modal
       const modalElement = document.getElementById('confirmarCompraModal');
-      if(typeof bootstrap !== 'undefined'){
+      if (typeof bootstrap !== 'undefined') {
         const confirmarModal = new bootstrap.Modal(modalElement);
 
         //Obtener todos los botones
@@ -161,30 +157,30 @@ export function mountCarrito(container, props) {
         const btnConfirmarCompra = document.getElementById('btn-confirmar-compra');
 
         // 6. Asignar evento para MOSTRAR el modal
-        if(btnMostrarModal) {
-            btnMostrarModal.addEventListener('click', () => {
-                confirmarModal.show();
-            });
+        if (btnMostrarModal) {
+          btnMostrarModal.addEventListener('click', () => {
+            confirmarModal.show();
+          });
         }
 
         // 7. Asignar evento para CONFIRMAR e ir al Ticket
-        if(btnConfirmarCompra) {
-            btnConfirmarCompra.addEventListener('click', () => {
-                // Opcional: ocultar el modal antes de navegar
-                confirmarModal.hide(); 
-                // Redirigir a la pantalla de ticket
-                window.location.hash = '/ticket'; 
-            });
+        if (btnConfirmarCompra) {
+          btnConfirmarCompra.addEventListener('click', () => {
+            // Opcional: ocultar el modal antes de navegar
+            confirmarModal.hide();
+            // Redirigir a la pantalla de ticket
+            window.location.hash = '/ticket';
+          });
         }
-      }else {
+      } else {
         console.warn('Bootstrap no está cargado, el modal de confirmación no funcionará.');
         // Fallback por si Bootstrap no carga: redirigir directamente
         const btnMostrarModal = document.getElementById('btn-show-confirm-modal');
-        if(btnMostrarModal) {
-              btnMostrarModal.addEventListener('click', () => {
-                  console.warn('Bootstrap no detectado. Redirigiendo a /ticket directamente.');
-                  window.location.hash = '/ticket';
-              });
+        if (btnMostrarModal) {
+          btnMostrarModal.addEventListener('click', () => {
+            console.warn('Bootstrap no detectado. Redirigiendo a /ticket directamente.');
+            window.location.hash = '/ticket';
+          });
         }
       }
     })

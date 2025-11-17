@@ -12,7 +12,7 @@ import {
   renderVentas,
   renderUsuarios,
   renderUsuarioForm,
-  renderEditarAdmin, // ✅ este estaba faltando
+  renderEditarAdmin,
 } from "../controllers/adminViewController.js";
 
 import {
